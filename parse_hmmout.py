@@ -7,24 +7,33 @@
 
 # First let's import some standard Python modules that will help us. 
 import sys, os, re
+from collections import defaultdict
 
 # Then let us specify that the input is the first file given in the 
 # command line
 input = open(sys.argv[1], "r")
 
 # get descriptions of HMMs
-descriptions = open("", "")
+cog2name = defaultdict(str)
+desc = open("cog_descriptions.txt", "r")
+for i in desc.readlines():
+	line = i.rstrip()
+	tabs = line.split("\t")
+	cog = tabs[0]
+	name = tabs[1]
+	cog2name[cog] = name
 
 # Then let's specify the output is "standard output" into the command line
 out = sys.stdout
 
 # Since we know what format we want the output we can write column headers
-out.write("Query\tHit\tScore\n")
+#out.write("Query\tHit\tScore\n")
 
 # Now we need to initialize two dictionaries that we will use later. Dictionaries are essentially lookup tables. We will use the first to link proteins to their best hits, 
 # and the second will link proteins to the bit score of their best hits. 
 protein2hit_dict = {}
 protein2bit_dict = {}
+protein2eval_dict = {}
 
 # Now we can start iteratively analyzing each line of the HMMER output file. 
 for i in input.readlines():
@@ -39,6 +48,7 @@ for i in input.readlines():
 		hit = hit_list[1]             # By splitting the string and getting the second item we can extract the COG hit and assign it to the variable "hit".
 
 		query = tabs[0] # The first item in the line is the query protein. We can assign the variable "query" to it. 
+		evalue = tabs[4] # The fourth item is the e-value. We can assign the variable "evalue" to it. 
 		bit_score = tabs[5] # The fifth item is the bit score. We can assign the variable "bit_score" to it. 
 
 		# Now this next loop is a bit tricky. Essentially we want to check to see if we have come across this protein in previous lines, and if so what bit score it had for that previous match. 
@@ -54,17 +64,18 @@ for i in input.readlines():
 				# same time, there would be no way to know what hits the bit scores belonged to. 
 				protein2bit_dict[query] = float(bit_score)
 				protein2hit_dict[query] = hit
+				protein2eval_dict[query] = evalue
 
 		else:
 			protein2bit_dict[query] = float(bit_score)
 			protein2hit_dict[query] = hit
-	
+			protein2eval_dict[query] = evalue	
+
 # Now after we have iterated through every line of the HMMER output we know we have all of the best hits cataloged in our dictionaries. So No we can iterate through the dictionaries 
 # and output all of the information to the command line. 
-
 for proteins in protein2hit_dict:
 	# The output needs to be a string, so we need to join the query names, hits, and scores together first. 
-	output = "\t".join([proteins, protein2hit_dict[proteins], str(protein2bit_dict[proteins])]) +"\n"
+	output = "\t".join([proteins, protein2hit_dict[proteins], cog2name[protein2hit_dict[proteins]], str(protein2bit_dict[proteins]), str(protein2eval_dict[proteins])]) +"\n"
 	out.write (output)
 
 # End
