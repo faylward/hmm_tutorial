@@ -12,6 +12,9 @@ import sys, os, re
 # command line
 input = open(sys.argv[1], "r")
 
+# get descriptions of HMMs
+descriptions = open("", "")
+
 # Then let's specify the output is "standard output" into the command line
 out = sys.stdout
 
