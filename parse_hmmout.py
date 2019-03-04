@@ -2,7 +2,7 @@
 
 ###########################################################################################################################################################################
 #### This is a Python script that will parse through the output of a tabulated HMMER3 output and provide the best hits for each query protein and the associated score. ###
-####################################################### Usage: python parse_hmmout.py <input_file> ########################################################################
+####################################################### Usage: python parse_hmmout.py <HMM Description file> <input_file> #################################################
 ###########################################################################################################################################################################
 
 # First let's import some standard Python modules that will help us. 
@@ -12,8 +12,6 @@ from collections import defaultdict
 # Then let us specify that the input is the first file given in the 
 # command line
 input = open(sys.argv[2], "r")
-
-print "Query\tTIGRFAM\tDescription\tBit_Score\tEvalue"
 
 # get descriptions of HMMs
 cog2name = defaultdict(str)
@@ -29,7 +27,7 @@ for i in desc.readlines():
 out = sys.stdout
 
 # Since we know what format we want the output we can write column headers
-#out.write("Query\tHit\tScore\n")
+print "Query\tTIGRFAM\tDescription\tBit_Score\tEvalue"
 
 # Now we need to initialize two dictionaries that we will use later. Dictionaries are essentially lookup tables. We will use the first to link proteins to their best hits, 
 # and the second will link proteins to the bit score of their best hits. 
