@@ -11,16 +11,18 @@ from collections import defaultdict
 
 # Then let us specify that the input is the first file given in the 
 # command line
-input = open(sys.argv[1], "r")
+input = open(sys.argv[2], "r")
+
+print "Query\tTIGRFAM\tDescription\tBit_Score\tEvalue"
 
 # get descriptions of HMMs
 cog2name = defaultdict(str)
-desc = open("cog_descriptions.txt", "r")
+desc = open(sys.argv[1], "r")
 for i in desc.readlines():
 	line = i.rstrip()
 	tabs = line.split("\t")
 	cog = tabs[0]
-	name = tabs[1]
+	name = tabs[3]
 	cog2name[cog] = name
 
 # Then let's specify the output is "standard output" into the command line
@@ -44,9 +46,7 @@ for i in input.readlines():
 		newline = re.sub("\s+", "\t", line) # Now we can replace the whitespace in the lines with tabs, which are easier to work with. 
 		tabs = newline.split("\t") # And now we can create a list by splitting each line into pieces based on where the tabs are. 
 
-		hit_list = tabs[2].split(".") # The third element in the list has the hit for that line. This string has the COG hit in the middle, with "." surrounding it. 
-		hit = hit_list[1]             # By splitting the string and getting the second item we can extract the COG hit and assign it to the variable "hit".
-
+		hit = tabs[2] # The third element in the list has the hit for that line. This string has the COG hit in the middle, with "." surrounding it. 
 		query = tabs[0] # The first item in the line is the query protein. We can assign the variable "query" to it. 
 		evalue = tabs[4] # The fourth item is the e-value. We can assign the variable "evalue" to it. 
 		bit_score = tabs[5] # The fifth item is the bit score. We can assign the variable "bit_score" to it. 
@@ -80,6 +80,7 @@ for proteins in protein2hit_dict:
 
 # End
 		
+
 
 
 
