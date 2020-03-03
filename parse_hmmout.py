@@ -27,7 +27,7 @@ for i in desc.readlines():
 out = sys.stdout
 
 # Since we know what format we want the output we can write column headers
-print "Query\tTIGRFAM\tDescription\tBit_Score\tEvalue"
+print("Query\tTIGRFAM\tDescription\tBit_Score\tEvalue")
 
 # Now we need to initialize two dictionaries that we will use later. Dictionaries are essentially lookup tables. We will use the first to link proteins to their best hits, 
 # and the second will link proteins to the bit score of their best hits. 
